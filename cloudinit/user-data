@@ -1,0 +1,18 @@
+#cloud-config
+
+chpasswd:
+  list: |
+    root:123123
+  expire: False
+
+#cloud-config
+users:
+  - name: k8s-user
+    ssh-authorized-keys: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDX2YmdDPZhsRA3KhGgEbjjRKpc1yuF+TVoSAQZCjvQZTq4pY5EnaCz7bKSLh1HnwRRa9zgTkllA9c5HYJSTdHFLwP0C0wqW4aB+1h9MSo0vkyQEow0GRdALXQ7aq3fB7FQdOSS4JLXsrHktkWnp0zQJQdUGRoSaLRb76o+ROQiYa/TYMISXCvVlPV13nmmuIidAYid60/cP+DA4AcKrr8T3vvAF9z4gjABAlVwOqjISVSEuNIDD9zLw0zfWqGRMk9V7YuSdwCXzlGdrRHfcn27XuiWk+orbE/fNRGwjsMCJlf5L6xnFSuPMP8pxzXQXzOtulYMWnSFNYRMg9luRXth k8s-user@k8s-host
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: users, wheel
+    passwd: 123123
+
+package_upgrade: true
+yum_repos:
+  epel_release
