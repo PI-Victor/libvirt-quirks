@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-genisoimage -o config.iso -V cidata -r -J meta-data user-data
-sudo mv -f config.iso /var/lib/libvirt/images/iso/
+name=$1
+a=${MEMORY:-1024}
 
-sudo virsh destroy example
-sudo virsh undefine example
-sudo virsh vol-delete instance1.qcow2 --pool default
-sudo cp /var/lib/libvirt/images/iso/CentOS-7-x86_64-GenericCloud-1802.qcow2 /var/lib/libvirt/images/instance1.qcow2
+genisoimage -o $name+config.iso -V cidata -r -J meta-data user-data
+sudo mv -f $name+config.iso /var/lib/libvirt/images/iso/
 
-sudo virt-install -n example -r 512 -w network=default \
+sudo cp /var/lib/libvirt/images/Fedora-Cloud-Base-27-1.6.x86_64.qcow2 /var/lib/libvirt/images/$name.qcow2
+
+sudo virt-install -n $name -r $MEMORY -w network=default \
 --graphics spice,listen=172.16.15.100 \
- --os-type=linux --os-variant=centos7.0 \
---disk path=/var/lib/libvirt/images/instance1.qcow2,format=qcow2,bus=virtio,cache=none \
---disk /var/lib/libvirt/images/iso/config.iso,device=cdrom
+--os-type=linux --os-variant=fedora18 \
+--disk path=/var/lib/libvirt/images/$name.qcow2,format=qcow2,bus=virtio,cache=none \
+--disk /var/lib/libvirt/images/iso/$name+config.iso,device=cdrom
+
+sudo arp -n | grep -i 192
