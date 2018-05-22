@@ -58,7 +58,7 @@ if [[ $1 = "create" ]]; then
 	
 	create_vm $node $qcow_image_path $mem
 	
-	read -p "Continue (y/n)?" choice
+	read -p "Continue (y/n)?: " choice
 	case "$choice" in 
 	    y|Y ) echo "yes"
 		  continue;;
