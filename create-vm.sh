@@ -25,6 +25,7 @@ create_vm() {
     sudo genisoimage -o /var/lib/libvirt/images/$name-config.iso -V cidata -r -J cloudinit/meta-data cloudinit/user-data
 
     sudo sudo virt-install --name=$name \
+	 --noautoconsole \
 	 --cpu host-passthrough \
 	 --import \
 	 --network type=bridge,source=br0,model=virtio \
@@ -36,7 +37,7 @@ create_vm() {
 	 --disk path=$2,bus=virtio,format=qcow2,cache=none,size=30 \
 	 --disk /var/lib/libvirt/images/$name-config.iso,device=cdrom \
 	 --os-type linux \
-	 --os-variant fedora18 \
+	 --os-variant rhel6 \
 	 --console pty,target_type=serial
 }
 
