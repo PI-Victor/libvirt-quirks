@@ -1,3 +1,5 @@
+# NOTE: populated by create-vm script
+
 #cloud-config
-instance-id: k8s-instance2
-local-hostname: k8s-instance2
+instance-id: k8s-slave2
+local-hostname: k8s-slave2

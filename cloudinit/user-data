@@ -3,16 +3,18 @@ groups:
   - cloud-users
   - kubernetes
   - users
-  
+  - docker
+
+chpasswd:
+  list: |
+    root:123123
+  expire: false
+
 users:
   - default
   - name: k8s-user
-    gecos: Foo B. Bar
     primary_group: users
-    groups: users
-    selinux_user: staff_u
-    expiredate: 2012-09-01
-    ssh_import_id: foobar
+    groups: users, wheel, kubernetes, docker
     lock_passwd: false
-    passwd: $1$SaltSalt$b95akDKmNgdPJpncprerX0
+    passwd: 123123
   
