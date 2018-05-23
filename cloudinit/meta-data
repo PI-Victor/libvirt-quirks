@@ -3,3 +3,4 @@
 #cloud-config
 instance-id: k8s-master
 local-hostname: k8s-master
+

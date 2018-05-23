@@ -1,9 +1,7 @@
 #cloud-config
 groups:
-  - cloud-users
-  - kubernetes
-  - users
   - docker
+  - k8s-user
 
 chpasswd:
   list: |
@@ -11,10 +9,39 @@ chpasswd:
   expire: false
 
 users:
-  - default
   - name: k8s-user
-    primary_group: users
-    groups: users, wheel, kubernetes, docker
+    primary_group: k8s-user
+    groups: wheel, docker
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
     lock_passwd: false
-    passwd: 123123
-  
+    passwd: $1$SaltSalt$b95akDKmNgdPJpncprerX0
+    ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDJt8vgDiDkIp5RJp/E+d2hjOdI3rxqjPvjNdqtf5tdFQ+jGfrJG1DZNEqlEMiLvbYHj2avKIdVVi5VuXA3rCmmsCExd5SdkhOb9kfdiz0sWb0er7iYaTUlEX6P7S0W3OdWb+Rjj8xxxxXYFmk/c9cioE43cyiMvtt8d0wkcIH2/tTxUYCGr9r5fejtGAe8We7VSsFN+uPyMWjFZd/VXNhRV0I0/n0vd+b+7CulhyqbXFAnDDLXohca+RZpl7v0zZot57oreND1IppzVF6GVu04cBNRIJqVBL0+cnnMlzXDHE+9EoDwnhYQoKW6/zeUTqfMhxo5E26e7HvNOD9pv753
+
+runcmd:
+  - sed -i --follow-symlinks 's/^SELINUX=.*/SELINUX=permissive/g' /etc/sysconfig/selinux
+
+write_files:
+  - path: /etc/yum.repos.d/kubernetes.repo
+    owner: root:root
+    permissions: '0444'
+    content: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+      enabled=1
+      gpgcheck=1
+      repo_gpgcheck=1
+      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+
+package_upgrade: true
+packages:
+  - nload
+  - tmux
+  - epel-release
+  - kubelet
+  - kubeadm
+  - kubectl
+  - docker
+  - emacs
